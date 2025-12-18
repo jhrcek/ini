@@ -1,5 +1,4 @@
-{-# LANGUAGE GeneralizedNewtypeDeriving #-}
-{-# LANGUAGE OverloadedStrings          #-}
+{-# LANGUAGE OverloadedStrings #-}
 
 -- | Clean configuration files in the INI format.
 --
@@ -234,8 +233,8 @@ writeIniFileWith wis fp = T.writeFile fp . printIniWith wis
 -- | Print an INI config.
 printIniWith :: WriteIniSettings -> Ini -> Text
 printIniWith wis i =
-  T.concat $ (map buildPair (iniGlobals i)) ++
-             (map buildSection (M.toList (iniSections i)))
+  T.concat $ map buildPair (iniGlobals i) ++
+             map buildSection (M.toList (iniSections i))
   where buildSection (name,pairs) =
           "[" <> name <> "]\n" <>
           T.concat (map buildPair pairs)
@@ -264,6 +263,7 @@ sectionParser =
      _ <- char ']'
      skipEndOfLine
      values <- many keyValueParser
+     skipComments
      return (T.strip name, values)
 
 -- | A key-value pair. Either @foo: bar@ or @foo=bar@.
