@@ -71,4 +71,16 @@ main =
                    (parseIni
                       "Name=Foo\n\
                       \Name[en_GB]=Fubar")
-                   (Left "Failed reading: Name[en_GB]=Fubar"))))
+                   (Left "Failed reading: Name[en_GB]=Fubar"))
+
+              it "handles commented out sections" $
+                  parseIni
+                     "[default]\n\
+                     \a = 1\n\
+                     \\n\
+                     \#[staging-PI]\n\
+                     \#a = 3\n"
+                     `shouldBe` (Right (Ini
+                        { iniSections = HM.fromList [ ( "default", [ ("a", "1")])]
+                        , iniGlobals = []
+                        }))))
