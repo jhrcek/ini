@@ -213,7 +213,7 @@ printIni = printIniWith defaultWriteIniSettings
 data KeySeparator
   = ColonKeySeparator
   | EqualsKeySeparator
-  deriving (Eq, Show)
+  deriving (Bounded, Enum, Eq, Show)
 
 -- | Settings determining how an INI file is written.
 data WriteIniSettings = WriteIniSettings
@@ -250,6 +250,7 @@ iniParser =
   (\kv secs -> Ini {iniSections = M.fromList secs, iniGlobals = kv}) <$>
   many keyValueParser <*>
   many sectionParser <*
+  skipComments <*
   (endOfInput <|> (fail . T.unpack =<< takeWhile (not . isControl)))
 
 -- | A section. Format: @[foo]@. Conventionally, @[FOO]@.
@@ -263,7 +264,6 @@ sectionParser =
      _ <- char ']'
      skipEndOfLine
      values <- many keyValueParser
-     skipComments
      return (T.strip name, values)
 
 -- | A key-value pair. Either @foo: bar@ or @foo=bar@.
