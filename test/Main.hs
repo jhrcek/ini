@@ -119,10 +119,6 @@ main =
                      in counterexample (T.unpack printed) $
                             parsed === Right ini
 
-{- | Generate a non-empty text that is valid for use as a key
-Keys cannot contain delimiters (: =), brackets ([ ]), or control characters
-Keys also cannot start with comment markers (; #)
--}
 genKey :: Gen Text
 genKey = do
     firstChar <- arbitrary `suchThat` isValidFirstKeyChar
@@ -132,7 +128,6 @@ genKey = do
     isValidKeyChar c = not (c == '=' || c == ':' || c == '[' || c == ']' || isControl c || isSpace c)
     isValidFirstKeyChar c = isValidKeyChar c && c /= ';' && c /= '#'
 
--- | Generate text valid for use as a section name (no brackets)
 genSectionName :: Gen Text
 genSectionName = do
     chars <- listOf1 $ arbitrary `suchThat` isValidSectionChar
@@ -143,7 +138,6 @@ genSectionName = do
   where
     isValidSectionChar c = c /= '[' && c /= ']' && not (isControl c)
 
--- | Generate text valid for use as a value (no newlines)
 genValue :: Gen Text
 genValue = do
     chars <- listOf $ arbitrary `suchThat` (not . isControl)
@@ -154,6 +148,8 @@ genKeyValue = (,) <$> genKey <*> genValue
 
 instance Arbitrary KeySeparator where
     arbitrary = arbitraryBoundedEnum
+    shrink ColonKeySeparator = []
+    shrink EqualsKeySeparator = [ColonKeySeparator]
 
 instance Arbitrary Ini where
     arbitrary = do
@@ -170,6 +166,26 @@ instance Arbitrary Ini where
                 { iniSections = HM.fromList sections
                 , iniGlobals = globals
                 }
+    shrink ini =
+        -- Shrink by removing sections
+        [ ini{iniSections = HM.fromList secs'}
+        | secs' <- shrinkList (const []) (HM.toList (iniSections ini))
+        ]
+            ++
+            -- Shrink by removing key-value pairs from sections
+            [ ini{iniSections = HM.fromList secs'}
+            | secs' <- shrinkOne shrinkSection (HM.toList (iniSections ini))
+            ]
+            ++
+            -- Shrink by removing globals
+            [ ini{iniGlobals = globals'}
+            | globals' <- shrinkList (const []) (iniGlobals ini)
+            ]
+      where
+        shrinkSection (name, pairs) = [(name, pairs') | pairs' <- shrinkList (const []) pairs]
+        shrinkOne _ [] = []
+        shrinkOne f (x : xs) = [x' : xs | x' <- f x] ++ [x : xs' | xs' <- shrinkOne f xs]
 
 instance Arbitrary WriteIniSettings where
     arbitrary = WriteIniSettings <$> arbitrary
+    shrink (WriteIniSettings sep) = WriteIniSettings <$> shrink sep
