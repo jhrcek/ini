@@ -1,5 +1,4 @@
-{-# LANGUAGE GeneralizedNewtypeDeriving #-}
-{-# LANGUAGE OverloadedStrings          #-}
+{-# LANGUAGE OverloadedStrings #-}
 
 -- | Clean configuration files in the INI format.
 --
@@ -214,7 +213,7 @@ printIni = printIniWith defaultWriteIniSettings
 data KeySeparator
   = ColonKeySeparator
   | EqualsKeySeparator
-  deriving (Eq, Show)
+  deriving (Bounded, Enum, Eq, Show)
 
 -- | Settings determining how an INI file is written.
 data WriteIniSettings = WriteIniSettings
@@ -234,8 +233,8 @@ writeIniFileWith wis fp = T.writeFile fp . printIniWith wis
 -- | Print an INI config.
 printIniWith :: WriteIniSettings -> Ini -> Text
 printIniWith wis i =
-  T.concat $ (map buildPair (iniGlobals i)) ++
-             (map buildSection (M.toList (iniSections i)))
+  T.concat $ map buildPair (iniGlobals i) ++
+             map buildSection (M.toList (iniSections i))
   where buildSection (name,pairs) =
           "[" <> name <> "]\n" <>
           T.concat (map buildPair pairs)
@@ -251,6 +250,7 @@ iniParser =
   (\kv secs -> Ini {iniSections = M.fromList secs, iniGlobals = kv}) <$>
   many keyValueParser <*>
   many sectionParser <*
+  skipComments <*
   (endOfInput <|> (fail . T.unpack =<< takeWhile (not . isControl)))
 
 -- | A section. Format: @[foo]@. Conventionally, @[FOO]@.

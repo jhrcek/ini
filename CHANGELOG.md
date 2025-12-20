@@ -1,3 +1,7 @@
+## 0.5.1
+
+- Fixed a parser bug where parsing would fail in presence of comments at the end of file.
+
 ## 0.5.0
 
 _2023-02-08, Chris Martin_
