@@ -1,6 +1,9 @@
 ## 0.5.1
 
-- Fixed a parser bug where parsing would fail in presence of comments at the end of file.
+_2025-12-20, Jan Hrček_
+
+- Fixed a parser bug where parsing would fail in presence of comments at the end of file
+[#12](https://github.com/jhrcek/ini/pull/12)
 
 ## 0.5.0
 
