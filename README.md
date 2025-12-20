@@ -1,7 +1,7 @@
 [![Hackage](https://img.shields.io/hackage/v/ini.svg?color=informational)](https://hackage.haskell.org/package/ini)
 [![ini on Stackage Nightly](https://stackage.org/package/ini/badge/nightly)](https://stackage.org/nightly/package/ini)
 [![Stackage LTS version](https://www.stackage.org/package/ini/badge/lts?label=Stackage)](https://www.stackage.org/package/ini)
-[![Haskell CI](https://github.com/andreasabel/ini/actions/workflows/haskell.yml/badge.svg)](https://github.com/andreasabel/ini/actions/workflows/haskell.yml)
+[![Haskell CI](https://github.com/jhrcek/ini/actions/workflows/haskell-ci.yml/badge.svg)](https://github.com/jhrcek/ini/actions/workflows/haskell-ci.yml)
 
 ini
 ===

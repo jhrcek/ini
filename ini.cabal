@@ -6,27 +6,27 @@ description:         Quick and easy configuration files in the INI format.
 license:             BSD3
 license-file:        LICENSE
 author:              Chris Done
-maintainer:          Andreas Abel
-homepage:            https://github.com/andreasabel/ini
-bug-reports:         https://github.com/andreasabel/ini/issues
+maintainer:          Jan Hrček
+homepage:            https://github.com/jhrcek/ini
+bug-reports:         https://github.com/jhrcek/ini/issues
 copyright:           2013 Chris Done
 category:            Data, Configuration
 build-type:          Simple
 
 tested-with:
   GHC == 9.12.2
-  GHC == 9.10.3
-  GHC == 9.8.4
-  GHC == 9.6.7
-  GHC == 9.4.8
-  GHC == 9.2.8
-  GHC == 9.0.2
-  GHC == 8.10.7
-  GHC == 8.8.4
-  GHC == 8.6.5
-  GHC == 8.4.4
-  GHC == 8.2.2
-  GHC == 8.0.2
+   || == 9.10.3
+   || == 9.8.4
+   || == 9.6.7
+   || == 9.4.8
+   || == 9.2.8
+   || == 9.0.2
+   || == 8.10.7
+   || == 8.8.4
+   || == 8.6.5
+   || == 8.4.4
+   || == 8.2.2
+   || == 8.0.2
 
 extra-source-files:
   CHANGELOG.md
@@ -66,4 +66,4 @@ test-suite ini-test
 
 source-repository head
   type:     git
-  location: https://github.com/andreasabel/ini.git
+  location: https://github.com/jhrcek/ini.git
