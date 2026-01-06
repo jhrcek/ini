@@ -14,7 +14,8 @@ category:            Data, Configuration
 build-type:          Simple
 
 tested-with:
-  GHC == 9.12.2
+  GHC == 9.14.1
+   || == 9.12.4
    || == 9.10.3
    || == 9.8.4
    || == 9.6.7
